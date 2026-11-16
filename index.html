@@ -183,7 +183,8 @@ a{color:#e8e8e8}a:hover{color:#ffffff}
 .fabo:hover{background:rgba(255,255,255,.05);border-color:#34373e;transform:translateX(-3px)}
 .fi{flex:none;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center}
 @media (prefers-reduced-motion: reduce){.fab summary,.fabm{animation:none}}
-@media (max-width: 700px){h1.hf{font-size:40px !important}.nav a.tn{display:none}.fabt{display:none}.fab{right:16px;bottom:16px}}
+@media (max-width: 700px){h1.hf{font-size:40px !important}.fabt{display:none}.fab{right:16px;bottom:16px}.hdr > div:first-child{padding-top:10px !important;padding-bottom:10px !important;gap:10px !important}.hdr .nav{width:100%;flex-wrap:nowrap !important;overflow-x:auto;gap:6px !important;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 86%,transparent);mask-image:linear-gradient(90deg,#000 86%,transparent)}.hdr .nav::-webkit-scrollbar{display:none}.hdr .nav a.btn{display:none}.nav a.tn{flex:none;font-size:14px;padding:8px 14px;border:1px solid #2a2d33}.nav a.tn::after{display:none}}
+.nav a.tn.on{color:#050506;background-image:linear-gradient(135deg,var(--a),#e9d28c 70%,var(--b));box-shadow:0 8px 24px -10px var(--b);border-color:transparent}
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -408,5 +409,19 @@ a{color:#e8e8e8}a:hover{color:#ffffff}
 </div>
 </details>
 </div>
+<script>
+(function(){
+var ids=['inicio','modelos','servicos','como','trabalhos','faq','contacto'];
+var links={};ids.forEach(function(id){links[id]=document.querySelector('.hdr .nav a[href="#'+id+'"]');});
+if(!('IntersectionObserver' in window))return;
+var io=new IntersectionObserver(function(es){es.forEach(function(e){
+if(!e.isIntersecting)return;
+ids.forEach(function(i){if(links[i])links[i].classList.remove('on');});
+var a=links[e.target.id];
+if(a){a.classList.add('on');var n=a.parentNode;if(n.scrollWidth>n.clientWidth){n.scrollTo({left:a.offsetLeft-n.clientWidth/2+a.offsetWidth/2,behavior:'smooth'});}}
+});},{rootMargin:'-50% 0px -50% 0px'});
+ids.forEach(function(id){var el=document.getElementById(id);if(el)io.observe(el);});
+})();
+</script>
 </body>
 </html>
