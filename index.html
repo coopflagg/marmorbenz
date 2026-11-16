@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<title>Mário Moreira · Coding e Retrofit para Mercedes-Benz</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0}
+a{color:#e8e8e8}a:hover{color:#ffffff}
+.site{position:relative;overflow:clip;timeline-scope:--t1,--t2,--t3,--t4,--t5,--t6,--t7;background:#050506;color:#e8e8e8;font-family:Univers,"Univers LT Std","Univers Next",Archivo,"Segoe UI",system-ui,sans-serif}
+.grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:linear-gradient(180deg,#000 0,transparent 900px);mask-image:linear-gradient(180deg,#000 0,transparent 900px)}
+.glow{position:absolute;border-radius:50%;filter:blur(110px);opacity:.3;pointer-events:none;animation:drift 18s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(70px,50px,0) scale(1.18)}}
+.strip{height:2px;background:linear-gradient(90deg,transparent,var(--a),#e8e8e8,var(--b),transparent,var(--a));background-size:200% 100%;animation:flow 26s linear infinite}
+@keyframes flow{to{background-position:200% 0}}
+.hdr{position:sticky;top:0;z-index:5;background:rgba(5,5,6,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.nav a.lnk{position:relative;text-decoration:none;padding:12px 0}
+.nav a.lnk::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--a),var(--b));transform:scaleX(0);transform-origin:left;transition:transform .3s ease}
+.nav a.lnk:hover::after{transform:scaleX(1)}
+.metal{background:linear-gradient(180deg,#ffffff 10%,#b9bcc4 55%,#7d818b 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bg{background:linear-gradient(90deg,var(--a),#e9d28c 70%,var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hf{font-family:Univers,"Univers LT Std","Univers Next",Archivo,system-ui,sans-serif}
+.h2{margin:0;font-family:Univers,"Univers LT Std","Univers Next",Archivo,system-ui,sans-serif;font-size:40px;font-weight:700;line-height:1.08;letter-spacing:0}
+.kick{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#c9c9c9}
+.kn{font-family:"JetBrains Mono",monospace;color:var(--b);letter-spacing:0}
+.pill{align-self:flex-start;display:flex;align-items:center;gap:10px;padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;letter-spacing:.06em;color:#e8e8e8;border:1px solid #2a2d33;background:rgba(255,255,255,.04)}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--a);animation:pulse 2s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 var(--a)}100%{box-shadow:0 0 0 12px transparent}}
+.btn{display:inline-block;font-weight:600;border-radius:999px;text-decoration:none;color:#050506;background:linear-gradient(135deg,#e9d28c,var(--b));transition:transform .25s ease,box-shadow .25s ease,filter .25s ease}
+.btn:hover{color:#050506;transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 14px 34px -10px var(--b)}
+.btn2{display:inline-block;padding:15px 26px;font-size:16px;font-weight:600;border-radius:999px;text-decoration:none;color:#e8e8e8;border:1px solid #5b5f69;transition:background .25s ease,border-color .25s ease,transform .25s ease}
+.btn2:hover{background:rgba(74,155,209,.12);border-color:var(--a);transform:translateY(-2px)}
+.dial{position:absolute;width:520px;height:520px;max-width:120%;animation:spin 90s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.console{position:relative;width:100%;max-width:420px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;padding:22px;border-radius:20px;border:1px solid transparent;background:linear-gradient(rgba(16,17,20,.92),rgba(16,17,20,.92)) padding-box,linear-gradient(140deg,var(--a),#2a2d33 40%,#2a2d33 60%,var(--b)) border-box;box-shadow:0 40px 80px -40px #000,0 0 60px -30px var(--a)}
+.float{animation:float 7s ease-in-out infinite alternate}
+@keyframes float{from{transform:translateY(0)}to{transform:translateY(-12px)}}
+.d3{width:9px;height:9px;border-radius:50%;background:#3a3d44}
+.vin{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:#0a0b0d;border:1px solid #2a2d33;font-family:"JetBrains Mono",monospace;font-size:14px}
+.vt{color:#f2f2f2;letter-spacing:.08em}
+.caret{width:8px;height:16px;background:var(--a);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.frow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px;border-radius:10px;background:rgba(255,255,255,.035);font-size:14px;font-weight:500;color:#e8e8e8}
+.tg{position:relative;flex:none;width:40px;height:22px;border-radius:999px;background:#2a2d33;animation:tgon 9s ease infinite}
+.kb{position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#9a9ea8;animation:kbon 9s ease infinite}
+@keyframes tgon{0%,8%{background:#2a2d33}14%,92%{background:var(--a)}100%{background:#2a2d33}}
+@keyframes kbon{0%,8%{transform:translateX(0);background:#9a9ea8}14%,92%{transform:translateX(18px);background:#ffffff}100%{transform:translateX(0);background:#9a9ea8}}
+.tg.on{animation:none;background:var(--a)}.kb.on{animation:none;transform:translateX(18px);background:#ffffff}
+.bar{height:4px;border-radius:4px;background:#2a2d33;overflow:hidden}
+.fill{height:4px;width:100%;background:linear-gradient(90deg,var(--a),var(--b));transform-origin:left;animation:fill 9s ease infinite}
+@keyframes fill{0%{transform:scaleX(0)}60%,92%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+.tickw{overflow:hidden;padding:22px 0;border-top:1px solid #1a1c20;border-bottom:1px solid #1a1c20;background:#08090b}
+.tick{display:flex;align-items:center;gap:28px;width:max-content;animation:tick 34s linear infinite;font-family:"JetBrains Mono",monospace;font-size:14px;letter-spacing:.18em;color:#9a9ea8}
+.sep{width:5px;height:5px;border-radius:50%;background:var(--b)}
+@keyframes tick{to{transform:translateX(-50%)}}
+.band{background:linear-gradient(180deg,#0a0b0d,#050506)}
+.mod{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;border-radius:14px;text-decoration:none;border:1px solid #1f2126;background:#0d0e11;transition:border-color .3s ease,background .3s ease,transform .3s ease}
+.mod:hover{border-color:var(--a);background:#101319;transform:translateX(4px)}
+.go{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1px solid #2a2d33;transition:background .3s ease,border-color .3s ease}
+.mod:hover .go{background:var(--a);border-color:var(--a)}
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:20px}
+.s2{grid-column:span 2}.s3{grid-column:span 3}.s4{grid-column:span 4}.s6{grid-column:span 6}
+.tile{position:relative;display:flex;flex-direction:column;gap:18px;padding:28px;border-radius:20px;border:1px solid transparent;background:linear-gradient(#0e0f12,#0e0f12) padding-box,linear-gradient(140deg,#34373e,#17181c 45%,#17181c) border-box;transition:transform .35s ease,box-shadow .35s ease,background .35s ease}
+.tile.row{flex-direction:row;flex-wrap:wrap;gap:28px}
+.tile:hover{transform:translateY(-6px);background:linear-gradient(#111318,#111318) padding-box,linear-gradient(140deg,var(--a),#26282e 45%,var(--b)) border-box;box-shadow:0 30px 60px -34px var(--a)}
+.ico{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;border:1px solid #34373e;background:linear-gradient(140deg,#1d1f24,#0e0f12);transition:border-color .35s ease}
+.tile:hover .ico{border-color:var(--b)}
+.price{margin-top:auto;align-self:flex-start;font-size:15px;font-weight:600;padding:6px 12px;border-radius:999px;color:#e9d28c;border:1px solid rgba(201,162,75,.45);background:rgba(201,162,75,.08)}
+.chip{font-size:13px;font-weight:500;padding:7px 12px;border-radius:999px;color:#e8e8e8;border:1px solid #34373e;background:rgba(255,255,255,.03)}
+.beam{fill:none;stroke-width:4;stroke-linecap:round;animation:beam 3.6s ease-in-out infinite}
+@keyframes beam{0%,100%{opacity:.25}50%{opacity:1}}
+.scr{padding:14px;border-radius:14px;border:1px solid #34373e;background:#08090b}
+.appg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.app{aspect-ratio:1;border-radius:10px;background:#1d1f24;animation:app 2.8s ease-in-out infinite}
+@keyframes app{0%,100%{background:#1d1f24}50%{background:var(--a)}}
+.app:nth-child(3n){animation-name:app2}
+@keyframes app2{0%,100%{background:#1d1f24}50%{background:var(--b)}}
+.route{fill:none;stroke-width:6;stroke-linecap:round;stroke-dasharray:320;stroke-dashoffset:320;animation:route 5s ease-in-out infinite}
+@keyframes route{0%{stroke-dashoffset:320}60%,100%{stroke-dashoffset:0}}
+.dest{animation:pulse2 2s ease-out infinite}
+@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.4}}
+.steps{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;padding-top:36px}
+.sline{position:absolute;left:0;right:0;top:42px;height:2px;background:linear-gradient(90deg,var(--a),var(--b));opacity:.5}
+.step{position:relative;display:flex;flex-direction:column;gap:10px;padding-top:30px}
+.dot{position:absolute;left:0;top:0;width:14px;height:14px;border-radius:50%;background:#050506;border:2px solid var(--b);box-shadow:0 0 0 5px #050506}
+.sn{font-family:"JetBrains Mono",monospace;font-size:14px;color:var(--b)}
+.work{position:relative;min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:16px;font-size:14px;color:#b9bcc4;border-radius:20px;border:1px solid #26282e;overflow:hidden;background:linear-gradient(110deg,#0d0e11 30%,#17191e 50%,#0d0e11 70%);background-size:220% 100%;animation:shim 4s linear infinite;transition:border-color .3s ease}
+.work:hover{border-color:var(--a)}
+@keyframes shim{to{background-position:-220% 0}}
+.pl{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#e9d28c,var(--b))}
+.faq{border-radius:16px;border:1px solid #1f2126;background:#0d0e11;transition:border-color .3s ease}
+.faq[open],.faq:hover{border-color:var(--a)}
+.faq summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 22px;cursor:pointer;list-style:none;font-size:18px;font-weight:600;color:#f2f2f2}
+.faq summary::-webkit-details-marker{display:none}
+.pm{display:flex;transition:transform .3s ease}
+.faq[open] .pm{transform:rotate(45deg)}
+.cta{display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center;padding:68px 28px;border-radius:28px;border:1px solid transparent;background:radial-gradient(ellipse at 50% 0%,rgba(74,155,209,.18),transparent 60%) padding-box,linear-gradient(#0c0d10,#0c0d10) padding-box,linear-gradient(140deg,var(--a),#26282e 40%,#26282e 60%,var(--b)) border-box}
+.inp{font-family:"JetBrains Mono",monospace;font-size:16px;letter-spacing:.08em;padding:15px 16px;border-radius:12px;border:1px solid #5b5f69;background:#050506;color:#f2f2f2;outline-offset:2px}
+.inp:focus{border-color:var(--a)}
+@keyframes rise{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+@supports (animation-timeline: view()){.reveal{animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 40%}}
+@media (max-width: 860px){.bento{grid-template-columns:1fr}.s2,.s3,.s4,.s6{grid-column:auto}.sline{display:none}.h2{font-size:34px}}
+@media (prefers-reduced-motion: reduce){.glow,.strip,.float,.tick,.reveal,.dial,.tg,.kb,.fill,.beam,.app,.route,.work,.pulse,.caret,.dest{animation:none}.route{stroke-dashoffset:0}.tile,.mod,.btn,.btn2{transition:none}}
+
+.railw{position:sticky;top:0;height:0;z-index:6}
+.rail{position:absolute;right:18px;top:230px;display:flex;flex-direction:column;gap:2px;align-items:flex-end}
+.rail a{display:flex;align-items:center;justify-content:flex-end;gap:10px;min-height:34px;min-width:44px;text-decoration:none;color:#6b6f79;font-size:12px;font-weight:600;letter-spacing:.08em}
+.rail a::after{content:"";width:11px;height:11px;border-radius:50%;border:2px solid currentColor;box-sizing:border-box;flex:none;transition:transform .2s ease}
+.rail a span{opacity:0;transform:translateX(6px);padding:6px 11px;border-radius:999px;background:rgba(16,17,20,.92);border:1px solid #2a2d33;color:#f2f2f2;white-space:nowrap;transition:opacity .2s ease,transform .2s ease}
+.rail a:hover{color:#e8e8e8}
+.rail a:hover span{opacity:1;transform:none}
+.rail a:hover::after{transform:scale(1.25)}
+@keyframes railon{from,to{color:var(--b)}}
+@keyframes raillab{from,to{opacity:1;transform:none;border-color:var(--b)}}
+#inicio{view-timeline:--t1 block}#modelos{view-timeline:--t2 block}#servicos{view-timeline:--t3 block}#como{view-timeline:--t4 block}#trabalhos{view-timeline:--t5 block}#faq{view-timeline:--t6 block}#contacto{view-timeline:--t7 block}
+#inicio,#modelos,#servicos,#como,#trabalhos,#faq,#contacto{view-timeline-inset:49% 49%}
+@supports (animation-timeline: view()){
+.r1{animation:railon linear;animation-timeline:--t1}.r1 span{animation:raillab linear;animation-timeline:--t1}
+.r2{animation:railon linear;animation-timeline:--t2}.r2 span{animation:raillab linear;animation-timeline:--t2}
+.r3{animation:railon linear;animation-timeline:--t3}.r3 span{animation:raillab linear;animation-timeline:--t3}
+.r4{animation:railon linear;animation-timeline:--t4}.r4 span{animation:raillab linear;animation-timeline:--t4}
+.r5{animation:railon linear;animation-timeline:--t5}.r5 span{animation:raillab linear;animation-timeline:--t5}
+.r6{animation:railon linear;animation-timeline:--t6}.r6 span{animation:raillab linear;animation-timeline:--t6}
+.r7{animation:railon linear;animation-timeline:--t7}.r7 span{animation:raillab linear;animation-timeline:--t7}
+}
+@media (max-width: 1100px){.railw{display:none}}
+.site.snap{height:100vh;overflow-x:hidden;overflow-y:auto;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+.snap .snapsec{min-height:100vh;box-sizing:border-box;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;padding:92px 0 40px !important}
+.snap .art{display:none}
+.snap .tile{padding:22px;gap:12px}
+.snap .tile.row{flex-direction:column;gap:12px}
+.snap .bento .s4,.snap .bento .s6{grid-column:span 2}
+.snap .bento .tile .btn2{display:none}
+.snap .work{min-height:190px}
+.snap .work:nth-child(n+4){display:none}
+.snap .work.s4{grid-column:span 2}
+.snap .steps{padding-top:8px}
+.snap .sline{top:14px}
+.snap footer{scroll-snap-align:end}
+.snap .h2{font-size:34px}
+.snap .art{display:none !important}
+.snap .snapsec > div:not(.glow){width:100%}
+
+.bgfx{position:sticky;top:0;height:100vh;margin-bottom:-100vh;overflow:hidden;pointer-events:none}
+.blob{position:absolute;width:62vw;height:62vw;max-width:1100px;max-height:1100px;border-radius:50%}
+.ba{left:-22vw;top:-24vw;background:radial-gradient(circle,var(--a) 0,transparent 62%);opacity:.34}
+.bb{right:-26vw;top:10vh;background:radial-gradient(circle,var(--b) 0,transparent 62%);opacity:.22}
+.bc{left:30vw;top:55vh;background:radial-gradient(circle,#8b8f98 0,transparent 60%);opacity:.12}
+@keyframes ba{0%{transform:translate(0,0)}17%{transform:translate(78vw,6vh)}34%{transform:translate(10vw,48vh)}50%{transform:translate(46vw,-4vh)}67%{transform:translate(86vw,44vh)}84%{transform:translate(4vw,10vh)}100%{transform:translate(40vw,30vh)}}
+@keyframes bb{0%{transform:translate(0,0)}17%{transform:translate(-80vw,30vh)}34%{transform:translate(-14vw,-20vh)}50%{transform:translate(-70vw,34vh)}67%{transform:translate(-90vw,-10vh)}84%{transform:translate(-10vw,36vh)}100%{transform:translate(-50vw,-6vh)}}
+@keyframes bc{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-20vw,-50vh) scale(1.4)}100%{transform:translate(20vw,-20vh) scale(1)}}
+@supports (animation-timeline: scroll()){
+.ba{animation:ba linear both;animation-timeline:scroll(nearest)}
+.bb{animation:bb linear both;animation-timeline:scroll(nearest)}
+.bc{animation:bc linear both;animation-timeline:scroll(nearest)}
+}
+.band{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0))}
+.nav a.tn{padding:9px 14px;border-radius:999px;transition:color .3s ease}
+.nav a.tn::after{left:14px;right:14px;bottom:4px}
+@keyframes navon{from,to{color:#050506;background-image:linear-gradient(135deg,var(--a),#e9d28c 70%,var(--b));box-shadow:0 8px 24px -10px var(--b)}}
+@supports (animation-timeline: view()){
+.n2{animation:navon linear;animation-timeline:--t2}
+.n3{animation:navon linear;animation-timeline:--t3}
+.n4{animation:navon linear;animation-timeline:--t4}
+.n5{animation:navon linear;animation-timeline:--t5}
+.n6{animation:navon linear;animation-timeline:--t6}
+}
+.fab{position:fixed;right:24px;bottom:24px;z-index:20;display:flex;flex-direction:column-reverse;align-items:flex-end;gap:14px;font-family:inherit}
+.fab summary{position:relative;list-style:none;width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#050506;background:linear-gradient(135deg,#e9d28c,var(--b));box-shadow:0 14px 34px -10px var(--b);animation:fabring 2.6s ease-out infinite;transition:transform .25s ease}
+.fab summary::-webkit-details-marker{display:none}
+.fab summary:hover{transform:scale(1.06)}
+.fab summary:focus-visible{outline:2px solid #ffffff;outline-offset:4px}
+@keyframes fabring{0%{box-shadow:0 0 0 0 rgba(201,162,75,.55),0 14px 34px -10px var(--b)}70%,100%{box-shadow:0 0 0 16px rgba(201,162,75,0),0 14px 34px -10px var(--b)}}
+.fabt{position:absolute;right:76px;white-space:nowrap;padding:9px 14px;border-radius:999px;font-size:14px;font-weight:600;color:#f2f2f2;background:rgba(16,17,20,.92);border:1px solid #34373e;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.fab .ic-x{display:none}
+.fab[open] .ic-c,.fab[open] .fabt{display:none}
+.fab[open] .ic-x{display:block}
+.fab[open] summary{animation:none}
+.fabm{width:270px;box-sizing:border-box;display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:20px;border:1px solid transparent;background:linear-gradient(rgba(14,15,18,.96),rgba(14,15,18,.96)) padding-box,linear-gradient(140deg,var(--a),#26282e 45%,var(--b)) border-box;box-shadow:0 30px 60px -20px #000;transform-origin:bottom right;animation:fabpop .28s ease-out}
+@keyframes fabpop{from{opacity:0;transform:translateY(10px) scale(.94)}to{opacity:1;transform:none}}
+.fabo{display:flex;align-items:center;gap:14px;padding:12px;border-radius:14px;text-decoration:none;border:1px solid transparent;transition:background .25s ease,border-color .25s ease,transform .25s ease}
+.fabo:hover{background:rgba(255,255,255,.05);border-color:#34373e;transform:translateX(-3px)}
+.fi{flex:none;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+@media (prefers-reduced-motion: reduce){.fab summary,.fabm{animation:none}}
+@media (max-width: 700px){h1.hf{font-size:40px !important}.nav a.tn{display:none}.fabt{display:none}.fab{right:16px;bottom:16px}}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="site" style="--a: #4a9bd1; --b: #c9a24b">
+<div class="grid"></div>
+<div class="bgfx" aria-hidden="true"><div class="blob ba"></div><div class="blob bb"></div><div class="blob bc"></div></div>
+<header class="hdr">
+<div style="position: relative; max-width: 1180px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-top: 16px; padding-bottom: 16px">
+<a href="#topo" style="display: flex; flex-direction: column; text-decoration: none"><span class="metal hf" style="font-size: 22px; font-weight: 700; letter-spacing: 0.04em">MÁRIO MOREIRA</span><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.24em; color: #4a9bd1">CODING · RETROFIT</span></a>
+<nav class="nav" aria-label="Principal" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px; font-size: 15px; font-weight: 500">
+<a class="lnk tn n2" href="#modelos">Modelos</a>
+<a class="lnk tn n3" href="#servicos">Serviços</a>
+<a class="lnk tn n4" href="#como">Como funciona</a>
+<a class="lnk tn n5" href="#trabalhos">Trabalhos</a>
+<a class="lnk tn n6" href="#faq">Perguntas</a>
+<a class="btn" href="https://wa.me/351925208722?text=Ol%C3%A1%21%20Modelo%3A%20/%20Ano%3A%20/%20VIN%3A%20/%20Localidade%3A%20/%20Servi%C3%A7o%3A" style="padding: 12px 22px; font-size: 15px">WhatsApp</a>
+</nav>
+</div>
+<div class="strip"></div>
+</header>
+<div class="railw"><nav class="rail" aria-label="Secções">
+<a class="r1" href="#inicio"><span>Início</span></a>
+<a class="r2" href="#modelos"><span>Modelos</span></a>
+<a class="r3" href="#servicos"><span>Serviços</span></a>
+<a class="r4" href="#como"><span>Como funciona</span></a>
+<a class="r5" href="#trabalhos"><span>Trabalhos</span></a>
+<a class="r6" href="#faq"><span>Perguntas</span></a>
+<a class="r7" href="#contacto"><span>Contacto</span></a>
+</nav></div>
+<main id="topo">
+<section id="inicio" style="position: relative; padding: 96px 0; padding-top: 88px">
+<div style="position: relative; max-width: 1180px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 56px">
+<div style="flex: 1 1 460px; display: flex; flex-direction: column; gap: 26px">
+<div class="pill"><span class="pulse"></span>Para Mercedes-Benz · Porto e todo o país</div>
+<h1 class="hf" style="margin: 0; font-size: 60px; font-weight: 700; line-height: 1.04; letter-spacing: -0.01em"><span class="metal">Ativa o que o teu Mercedes</span> <span class="bg">já consegue fazer</span></h1>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 18px; max-width: 520px">Codificações, CarPlay e Android Auto, iluminação ambiente, ecrãs Android e GPS. Diz-me o modelo e o VIN e recebes a lista do que é possível no teu carro.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 14px">
+<a class="btn" href="https://wa.me/351925208722?text=Ol%C3%A1%21%20Modelo%3A%20/%20Ano%3A%20/%20VIN%3A%20/%20Localidade%3A%20/%20Servi%C3%A7o%3A" style="padding: 16px 28px; font-size: 16px">Pedir orçamento pelo WhatsApp</a>
+<a class="btn2" href="#trabalhos">Ver trabalhos</a>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px 26px; font-size: 14px; font-weight: 500; color: #c9c9c9"><span style="display: flex; align-items: center; gap: 8px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #c9a24b; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Verificação pelo VIN</span><span style="display: flex; align-items: center; gap: 8px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #c9a24b; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Alterações reversíveis</span><span style="display: flex; align-items: center; gap: 8px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #c9a24b; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Presencial ou à distância</span></div>
+</div>
+<div style="flex: 1 1 400px; position: relative; min-height: 470px; display: flex; align-items: center; justify-content: center">
+<svg class="dial" viewBox="0 0 400 400" aria-hidden="true"><line x1="378.0" y1="200.0" x2="398.0" y2="200.0" style="stroke: #5b5f69; stroke-width: 2.5"></line><line x1="377.0" y1="218.6" x2="390.9" y2="220.1" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="374.1" y1="237.0" x2="387.8" y2="239.9" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="369.3" y1="255.0" x2="382.6" y2="259.3" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="362.6" y1="272.4" x2="375.4" y2="278.1" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="354.2" y1="289.0" x2="371.5" y2="299.0" style="stroke: #5b5f69; stroke-width: 2.5"></line><line x1="344.0" y1="304.6" x2="355.3" y2="312.9" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="332.3" y1="319.1" x2="342.7" y2="328.5" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="319.1" y1="332.3" x2="328.5" y2="342.7" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="304.6" y1="344.0" x2="312.9" y2="355.3" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="289.0" y1="354.2" x2="299.0" y2="371.5" style="stroke: #5b5f69; stroke-width: 2.5"></line><line x1="272.4" y1="362.6" x2="278.1" y2="375.4" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="255.0" y1="369.3" x2="259.3" y2="382.6" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="237.0" y1="374.1" x2="239.9" y2="387.8" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="218.6" y1="377.0" x2="220.1" y2="390.9" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="200.0" y1="378.0" x2="200.0" y2="398.0" style="stroke: #5b5f69; stroke-width: 2.5"></line><line x1="181.4" y1="377.0" x2="179.9" y2="390.9" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="163.0" y1="374.1" x2="160.1" y2="387.8" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="145.0" y1="369.3" x2="140.7" y2="382.6" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="127.6" y1="362.6" x2="121.9" y2="375.4" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="111.0" y1="354.2" x2="101.0" y2="371.5" style="stroke: #5b5f69; stroke-width: 2.5"></line><line x1="95.4" y1="344.0" x2="87.1" y2="355.3" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="80.9" y1="332.3" x2="71.5" y2="342.7" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="67.7" y1="319.1" x2="57.3" y2="328.5" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="56.0" y1="304.6" x2="44.7" y2="312.9" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="45.8" y1="289.0" x2="28.5" y2="299.0" style="stroke: #5b5f69; stroke-width: 2.5"></line><line x1="37.4" y1="272.4" x2="24.6" y2="278.1" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="30.7" y1="255.0" x2="17.4" y2="259.3" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="25.9" y1="237.0" x2="12.2" y2="239.9" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="23.0" y1="218.6" x2="9.1" y2="220.1" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="22.0" y1="200.0" x2="2.0" y2="200.0" style="stroke: #5b5f69; stroke-width: 2.5"></line><line x1="23.0" y1="181.4" x2="9.1" y2="179.9" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="25.9" y1="163.0" x2="12.2" y2="160.1" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="30.7" y1="145.0" x2="17.4" y2="140.7" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="37.4" y1="127.6" x2="24.6" y2="121.9" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="45.8" y1="111.0" x2="28.5" y2="101.0" style="stroke: #5b5f69; stroke-width: 2.5"></line><line x1="56.0" y1="95.4" x2="44.7" y2="87.1" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="67.7" y1="80.9" x2="57.3" y2="71.5" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="80.9" y1="67.7" x2="71.5" y2="57.3" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="95.4" y1="56.0" x2="87.1" y2="44.7" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="111.0" y1="45.8" x2="101.0" y2="28.5" style="stroke: #5b5f69; stroke-width: 2.5"></line><line x1="127.6" y1="37.4" x2="121.9" y2="24.6" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="145.0" y1="30.7" x2="140.7" y2="17.4" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="163.0" y1="25.9" x2="160.1" y2="12.2" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="181.4" y1="23.0" x2="179.9" y2="9.1" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="200.0" y1="22.0" x2="200.0" y2="2.0" style="stroke: #5b5f69; stroke-width: 2.5"></line><line x1="218.6" y1="23.0" x2="220.1" y2="9.1" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="237.0" y1="25.9" x2="239.9" y2="12.2" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="255.0" y1="30.7" x2="259.3" y2="17.4" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="272.4" y1="37.4" x2="278.1" y2="24.6" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="289.0" y1="45.8" x2="299.0" y2="28.5" style="stroke: #5b5f69; stroke-width: 2.5"></line><line x1="304.6" y1="56.0" x2="312.9" y2="44.7" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="319.1" y1="67.7" x2="328.5" y2="57.3" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="332.3" y1="80.9" x2="342.7" y2="71.5" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="344.0" y1="95.4" x2="355.3" y2="87.1" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="354.2" y1="111.0" x2="371.5" y2="101.0" style="stroke: #5b5f69; stroke-width: 2.5"></line><line x1="362.6" y1="127.6" x2="375.4" y2="121.9" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="369.3" y1="145.0" x2="382.6" y2="140.7" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="374.1" y1="163.0" x2="387.8" y2="160.1" style="stroke: #5b5f69; stroke-width: 1"></line><line x1="377.0" y1="181.4" x2="390.9" y2="179.9" style="stroke: #5b5f69; stroke-width: 1"></line><circle cx="200" cy="200" r="168" style="fill: none; stroke: #2a2d33; stroke-width: 1"></circle></svg>
+<div class="console float" role="img" aria-label="Exemplo ilustrativo de uma sessão de codificação com funções a serem ativadas">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid #2a2d33">
+<span style="display: flex; gap: 6px"><span class="d3"></span><span class="d3"></span><span class="d3" style="background: #c9a24b"></span></span>
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; color: #9a9ea8">SESSÃO DE CODIFICAÇÃO</span>
+</div>
+<div class="vin"><span style="color: #9a9ea8">VIN</span><span class="vt">W1K••••••••••••••</span><span class="caret"></span></div>
+<div class="frow"><span>Alarme</span><span class="tg" style="animation-delay: 0.0s"><span class="kb" style="animation-delay: 0.0s"></span></span></div>
+<div class="frow"><span>Menu AMG</span><span class="tg" style="animation-delay: 0.9s"><span class="kb" style="animation-delay: 0.9s"></span></span></div>
+<div class="frow"><span>Piscas automáticos</span><span class="tg" style="animation-delay: 1.8s"><span class="kb" style="animation-delay: 1.8s"></span></span></div>
+<div class="frow"><span>Máximos automáticos</span><span class="tg" style="animation-delay: 2.7s"><span class="kb" style="animation-delay: 2.7s"></span></span></div>
+<div class="frow"><span>CarPlay e Android Auto</span><span class="tg" style="animation-delay: 3.6s"><span class="kb" style="animation-delay: 3.6s"></span></span></div>
+<div class="bar"><div class="fill"></div></div>
+<div style="font-size: 12px; color: #9a9ea8">Exemplo ilustrativo</div>
+</div>
+</div>
+</div>
+</section>
+<div aria-hidden="true" class="tickw"><div class="tick"><span>W176</span><span class='sep'></span><span>W117</span><span class='sep'></span><span>W246</span><span class='sep'></span><span>W177</span><span class='sep'></span><span>W118</span><span class='sep'></span><span>W247</span><span class='sep'></span><span>W205</span><span class='sep'></span><span>W213</span><span class='sep'></span><span>MBUX</span><span class='sep'></span><span>NTG 5</span><span class='sep'></span><span>COMAND</span><span class='sep'></span><span>AUDIO 20</span><span class='sep'></span><span>W176</span><span class='sep'></span><span>W117</span><span class='sep'></span><span>W246</span><span class='sep'></span><span>W177</span><span class='sep'></span><span>W118</span><span class='sep'></span><span>W247</span><span class='sep'></span><span>W205</span><span class='sep'></span><span>W213</span><span class='sep'></span><span>MBUX</span><span class='sep'></span><span>NTG 5</span><span class='sep'></span><span>COMAND</span><span class='sep'></span><span>AUDIO 20</span><span class='sep'></span></div></div>
+<section id="modelos" style="position: relative; padding: 96px 0">
+<div style="position: relative; max-width: 1180px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 36px">
+<div class="reveal" style="display: flex; flex-direction: column; gap: 12px"><div class="kick"><span class="kn">01</span>Começa pelo teu carro</div><h2 class="h2"><span class="metal">Escolhe o</span> <span class="bg">modelo</span></h2><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; max-width: 560px">Cada modelo tem a sua lista de serviços e preços.</p></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px">
+<a class="mod reveal" href="#servicos"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; color: #f2f2f2">Classe A · CLA · GLA · Classe B</span><span style="font-size: 13px; color: #9a9ea8">2012–2018</span></span><span class="go"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+<a class="mod reveal" href="#servicos"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; color: #f2f2f2">Classe A · CLA · Classe B com MBUX</span><span style="font-size: 13px; color: #9a9ea8">2018–2023</span></span><span class="go"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+<a class="mod reveal" href="#servicos"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; color: #f2f2f2">Classe C · GLC (W205)</span><span style="font-size: 13px; color: #9a9ea8">2014–2018</span></span><span class="go"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+<a class="mod reveal" href="#servicos"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; color: #f2f2f2">Classe C facelift</span><span style="font-size: 13px; color: #9a9ea8">2018–2022</span></span><span class="go"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+<a class="mod reveal" href="#servicos"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; color: #f2f2f2">Classe E (W213)</span><span style="font-size: 13px; color: #9a9ea8">2016–2022</span></span><span class="go"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+<a class="mod reveal" href="#servicos"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; color: #f2f2f2">Classe E · GLC facelift</span><span style="font-size: 13px; color: #9a9ea8">2019–2023</span></span><span class="go"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+<a class="mod reveal" href="#servicos"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; color: #f2f2f2">Classe C · E · S · CLS</span><span style="font-size: 13px; color: #9a9ea8">2011–2015</span></span><span class="go"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+</div>
+</div>
+</section>
+<section id="servicos" class="band" style="position: relative; padding: 96px 0">
+<div style="position: relative; max-width: 1180px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 36px">
+<div class="reveal" style="display: flex; flex-direction: column; gap: 12px"><div class="kick"><span class="kn">02</span>Serviços</div><h2 class="h2"><span class="metal">O que posso fazer</span> <span class="bg">no teu carro</span></h2></div>
+<div class="bento">
+<div class="tile reveal s4 row">
+<div style="display: flex; flex-direction: column; gap: 12px; flex: 1 1 240px">
+<div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14"></path></svg></div>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600; color: #f2f2f2">Codificações</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">Ativação de funções que o carro já traz: alarme, menu AMG, piscas, máximos automáticos e outras.</p>
+<div class="price">desde 59 €</div>
+</div>
+<div class="art" style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 10px; justify-content: center">
+<div class="frow"><span>Alarme</span><span class="tg on"><span class="kb on"></span></span></div>
+<div class="frow"><span>Piscas automáticos</span><span class="tg on"><span class="kb on"></span></span></div>
+<div class="frow"><span>Máximos automáticos</span><span class="tg on"><span class="kb on"></span></span></div>
+</div>
+</div>
+<div class="tile reveal s2">
+<div style="display: flex; flex-direction: column; gap: 12px; flex: 1">
+<div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M8.5 12a3.5 3.5 0 0 1 7 0c0 1.6-1 2.4-1.4 3.5h-4.2C9.5 14.4 8.5 13.6 8.5 12zM10 19h4"></path><path d="M12 3v2M5.6 5.6L7 7M3 12h2M19 12h2M17 7l1.4-1.4"></path></svg></div>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600; color: #f2f2f2">Iluminação ambiente</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">Kits por modelo, com instalação e integração no sistema do carro.</p>
+<div class="price">[preço desde]</div>
+</div>
+<svg class="art" viewBox="0 0 240 90" aria-hidden="true" style="width: 100%; height: 90px"><defs><linearGradient id="mmLuz" x1="0" x2="1"><stop offset="0" stop-color="#4a9bd1"></stop><stop offset="1" stop-color="#c9a24b"></stop></linearGradient></defs>
+<path class="beam" d="M4 70 C60 20 180 20 236 70" style="stroke: url(#mmLuz)"></path>
+<path class="beam" d="M4 82 C70 44 170 44 236 82" style="stroke: url(#mmLuz); animation-delay: -1.2s"></path>
+<path class="beam" d="M30 56 C80 16 160 16 210 56" style="stroke: url(#mmLuz); animation-delay: -2.4s"></path></svg>
+</div>
+<div class="tile reveal s2">
+<div style="display: flex; flex-direction: column; gap: 12px; flex: 1">
+<div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><rect x="2" y="5" width="14" height="10" rx="1.5"></rect><rect x="16" y="9" width="6" height="11" rx="1.2"></rect><path d="M6 19h6"></path></svg></div>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600; color: #f2f2f2">CarPlay e Android Auto</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">Ativação por software nos modelos compatíveis, confirmada pelo VIN.</p>
+<div class="price">[preço desde]</div>
+</div>
+<div class="scr art"><div class="appg"><span class="app" style="animation-delay: 0.00s"></span><span class="app" style="animation-delay: 0.35s"></span><span class="app" style="animation-delay: 0.70s"></span><span class="app" style="animation-delay: 1.05s"></span><span class="app" style="animation-delay: 1.40s"></span><span class="app" style="animation-delay: 1.75s"></span><span class="app" style="animation-delay: 2.10s"></span><span class="app" style="animation-delay: 2.45s"></span></div></div>
+</div>
+<div class="tile reveal s2">
+<div style="display: flex; flex-direction: column; gap: 12px; flex: 1">
+<div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600; color: #f2f2f2">Retrofit e instalações</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">Equipamento novo, instalado e configurado.</p>
+<div class="price">[preço desde]</div>
+</div>
+<div class="art" style="display: flex; flex-wrap: wrap; gap: 8px"><span class="chip">Ecrã Android</span><span class="chip">Módulo CarPlay</span><span class="chip">Câmara traseira</span><span class="chip">Módulo de vidros</span><span class="chip">Distronic</span></div>
+</div>
+<div class="tile reveal s2">
+<div style="display: flex; flex-direction: column; gap: 12px; flex: 1">
+<div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M12 21s-6-5.3-6-10a6 6 0 0 1 12 0c0 4.7-6 10-6 10z"></path><circle cx="12" cy="11" r="2"></circle></svg></div>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600; color: #f2f2f2">GPS</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">Cartões SD e PIN para COMAND, com envio para Portugal e Europa.</p>
+<div class="price">[preço desde]</div>
+</div>
+<svg class="art" viewBox="0 0 240 90" aria-hidden="true" style="width: 100%; height: 90px"><path d="M10 78 C50 78 40 40 90 44 S150 70 170 40 S215 14 228 14" style="fill: none; stroke: #2a2d33; stroke-width: 6; stroke-linecap: round"></path><path class="route" d="M10 78 C50 78 40 40 90 44 S150 70 170 40 S215 14 228 14" style="stroke: #4a9bd1"></path><circle cx="10" cy="78" r="5" style="fill: #c9c9c9"></circle><circle class="dest" cx="228" cy="14" r="6" style="fill: #c9a24b"></circle></svg>
+</div>
+<div class="tile reveal s6 row">
+<div style="display: flex; flex-direction: column; gap: 12px; flex: 1 1 240px">
+<div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><rect x="3" y="8" width="18" height="9" rx="2"></rect><path d="M11 12.5h6"></path><circle cx="7" cy="12.5" r="1"></circle></svg></div>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600; color: #f2f2f2">Boxes Android</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">Boxes para o sistema original, com entrega em mão ou envio por correio registado.</p>
+<div class="price">[preço desde]</div>
+</div>
+<a class="btn2" href="https://wa.me/351925208722?text=Ol%C3%A1%21%20Modelo%3A%20/%20Ano%3A%20/%20VIN%3A%20/%20Localidade%3A%20/%20Servi%C3%A7o%3A" style="align-self: center">Perguntar disponibilidade</a>
+</div>
+</div>
+</div>
+</section>
+<section id="como" style="position: relative; padding: 96px 0">
+<div style="position: relative; max-width: 1180px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 36px">
+<div class="reveal" style="display: flex; flex-direction: column; gap: 12px"><div class="kick"><span class="kn">03</span>Como funciona</div><h2 class="h2"><span class="metal">Três formas de</span> <span class="bg">fazer o serviço</span></h2></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px">
+<div class="tile reveal"><div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg></div><h3 style="margin: 0; font-size: 19px; font-weight: 600; color: #f2f2f2">Presencial no Porto</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">Marcação com hora, em local combinado. Indicado para instalações e iluminação.</p></div>
+<div class="tile reveal"><div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><rect x="5" y="5" width="14" height="10" rx="1.5"></rect><path d="M3 19h18"></path><path d="M9.5 9a3.5 3.5 0 0 1 5 0M11 11a1.4 1.4 0 0 1 2 0"></path></svg></div><h3 style="margin: 0; font-size: 19px; font-weight: 600; color: #f2f2f2">À distância, em todo o país</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">Recebes o cabo por correio, ligas um portátil Windows ao carro e o serviço é feito remotamente, com acompanhamento.</p></div>
+<div class="tile reveal"><div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"></path><path d="M3 8l9 5 9-5M12 13v8"></path></svg></div><h3 style="margin: 0; font-size: 19px; font-weight: 600; color: #f2f2f2">Por envio</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">Cartões GPS e boxes seguem por correio registado, com código de seguimento.</p></div>
+</div>
+<div class="steps">
+<div class="sline"></div>
+<div class="step reveal"><div class="dot"></div><div class="sn">01</div><h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #f2f2f2">Envia o VIN</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">Modelo, ano, número de chassis e localidade, pelo WhatsApp.</p></div>
+<div class="step reveal"><div class="dot"></div><div class="sn">02</div><h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #f2f2f2">Recebe a lista</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">O que é possível no teu carro e o preço de cada opção.</p></div>
+<div class="step reveal"><div class="dot"></div><div class="sn">03</div><h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #f2f2f2">Marca o serviço</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">Presencial, à distância ou por envio.</p></div>
+<div class="step reveal"><div class="dot"></div><div class="sn">04</div><h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #f2f2f2">Confirma e paga</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px">Cada função é verificada contigo antes do pagamento, por MB Way ou transferência.</p></div>
+</div>
+</div>
+</section>
+<section id="trabalhos" class="band" style="position: relative; padding: 96px 0">
+<div style="position: relative; max-width: 1180px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 36px">
+<div class="reveal" style="display: flex; flex-direction: column; gap: 12px"><div class="kick"><span class="kn">04</span>Trabalhos</div><h2 class="h2"><span class="metal">Feito em</span> <span class="bg">carros de clientes</span></h2></div>
+<div class="bento">
+<div class="work reveal s4"><span class="pl"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 22px; height: 22px; flex: none; fill: none; stroke: #050506; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M9 6.5l9 5.5-9 5.5z"></path></svg></span><span>[foto ou vídeo de trabalho: iluminação ambiente]</span></div>
+<div class="work reveal s2"><span class="pl"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 22px; height: 22px; flex: none; fill: none; stroke: #050506; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M9 6.5l9 5.5-9 5.5z"></path></svg></span><span>[foto ou vídeo de trabalho: ecrã Android]</span></div>
+<div class="work reveal s2"><span class="pl"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 22px; height: 22px; flex: none; fill: none; stroke: #050506; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M9 6.5l9 5.5-9 5.5z"></path></svg></span><span>[foto ou vídeo de trabalho: codificações]</span></div>
+<div class="work reveal s2"><span class="pl"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 22px; height: 22px; flex: none; fill: none; stroke: #050506; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M9 6.5l9 5.5-9 5.5z"></path></svg></span><span>[foto ou vídeo de trabalho: CarPlay]</span></div>
+<div class="work reveal s2"><span class="pl"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 22px; height: 22px; flex: none; fill: none; stroke: #050506; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M9 6.5l9 5.5-9 5.5z"></path></svg></span><span>[foto ou vídeo de trabalho: GPS]</span></div>
+</div>
+<div class="tile reveal row" style="align-items: center; justify-content: space-between">
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4">[recomendação real de um cliente, com nome e modelo]</p>
+<a class="btn2" href="https://www.facebook.com/mm.benz.codificacoes/reviews">Ler recomendações no Facebook</a>
+</div>
+</div>
+</section>
+<section id="faq" style="position: relative; padding: 96px 0">
+<div style="position: relative; max-width: 1180px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+<div style="padding-bottom: 20px"><div class="reveal" style="display: flex; flex-direction: column; gap: 12px"><div class="kick"><span class="kn">05</span>Perguntas frequentes</div><h2 class="h2"><span class="metal">Antes de</span> <span class="bg">marcares</span></h2></div></div>
+<details class="faq reveal"><summary><span>As codificações afetam a garantia?</span><span class="pm"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M12 5v14M5 12h14"></path></svg></span></summary><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px; padding: 0 22px 22px">São ativações de funções já existentes no carro e podem ser revertidas. Se uma atualização da marca as desativar, são repostas sem custo.</p></details>
+<details class="faq reveal"><summary><span>Como funciona o serviço à distância?</span><span class="pm"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M12 5v14M5 12h14"></path></svg></span></summary><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px; padding: 0 22px 22px">É enviado um cabo por correio. Precisas de um portátil com Windows e internet; o resto é feito remotamente, com instruções passo a passo.</p></details>
+<details class="faq reveal"><summary><span>O meu carro é compatível?</span><span class="pm"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; flex: none; fill: none; stroke: #f2f2f2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M12 5v14M5 12h14"></path></svg></span></summary><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4; font-size: 15px; padding: 0 22px 22px">Depende do modelo, do ano e do equipamento. Com o VIN confirma-se antes de marcares, sem compromisso.</p></details>
+</div>
+</section>
+<section id="contacto" style="position: relative; padding: 96px 0; padding-top: 24px">
+<div style="position: relative; max-width: 1180px; margin: 0 auto; padding: 0 24px; box-sizing: border-box">
+<div class="cta reveal">
+<h2 class="h2"><span class="metal">Envia o VIN e recebe a lista</span> <span class="bg">para o teu carro</span></h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #b9bcc4">Resposta pelo WhatsApp, sem compromisso.</p>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 12px; width: 100%">
+<div style="display: flex; flex-direction: column; gap: 6px; text-align: left; flex: 0 1 340px">
+<label for="mm-vin" style="font-size: 13px; font-weight: 600; letter-spacing: 0.1em; color: #c9c9c9">VIN (17 CARACTERES)</label>
+<input id="mm-vin" class="inp" type="text" maxlength="17" placeholder="W1K…">
+</div>
+<a class="btn" href="https://wa.me/351925208722?text=Ol%C3%A1%21%20Modelo%3A%20/%20Ano%3A%20/%20VIN%3A%20/%20Localidade%3A%20/%20Servi%C3%A7o%3A" style="padding: 16px 28px; font-size: 16px">Enviar pelo WhatsApp</a>
+</div>
+<div style="font-size: 14px; color: #9a9ea8">ou liga para 925 208 722</div>
+</div>
+</div>
+</section>
+</main>
+<footer style="position: relative; padding: 0 0 40px">
+<div class="strip" style="margin-bottom: 36px"></div>
+<div style="position: relative; max-width: 1180px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; font-size: 14px; color: #9a9ea8">
+<div style="display: flex; flex-direction: column; gap: 6px"><span class="metal hf" style="font-weight: 700; font-size: 13px">MÁRIO MOREIRA · CODING E RETROFIT</span><span>Negócio independente, sem ligação à Mercedes-Benz AG.</span></div>
+<nav class="nav" aria-label="Redes sociais" style="display: flex; flex-wrap: wrap; gap: 8px 24px">
+<a class="lnk" href="https://www.facebook.com/mm.benz.codificacoes">Facebook</a>
+<a class="lnk" href="https://www.instagram.com/mm.benz.codificacoes/">Instagram</a>
+<a class="lnk" href="https://www.youtube.com/channel/UCxd83Zhky-y04XAg-ZUDDmw">YouTube</a>
+<a class="lnk" href="https://wa.me/351925208722?text=Ol%C3%A1%21%20Modelo%3A%20/%20Ano%3A%20/%20VIN%3A%20/%20Localidade%3A%20/%20Servi%C3%A7o%3A">WhatsApp</a>
+</nav>
+</div>
+</footer>
+<details class="fab">
+<summary aria-label="Abrir opções de contacto"><span class="fabt">Fala connosco</span><svg class="ic-c" viewBox="0 0 24 24" aria-hidden="true" style="width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M4 5h16v11H9l-5 4z"></path><path d="M8 9h8M8 12h5"></path></svg><svg class="ic-x" viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M6 6l12 12M18 6L6 18"></path></svg></summary>
+<div class="fabm">
+<div style="font-size: 13px; font-weight: 600; letter-spacing: 0.14em; color: #9a9ea8; padding: 4px 6px 8px">COMO PREFERES FALAR?</div>
+<a class="fabo" href="https://wa.me/351925208722?text=Ol%C3%A1%21%20Modelo%3A%20/%20Ano%3A%20/%20VIN%3A%20/%20Localidade%3A%20/%20Servi%C3%A7o%3A"><span class="fi" style="background: linear-gradient(135deg, #e9d28c, #c9a24b); color: #050506"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"></path></svg></span><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600; color: #f2f2f2">WhatsApp</span><span style="font-size: 13px; color: #9a9ea8">Resposta mais rápida</span></span></a>
+<a class="fabo" href="https://m.me/mm.benz.codificacoes"><span class="fi" style="background: linear-gradient(135deg, #4a9bd1, #2b5f86); color: #ffffff"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M12 4c-4.6 0-8 3.2-8 7.3 0 2.3 1.1 4.3 2.9 5.7V20l2.8-1.5c.7.2 1.5.3 2.3.3 4.6 0 8-3.2 8-7.4S16.6 4 12 4z"></path><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01" style="stroke-width: 2.6"></path></svg></span><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600; color: #f2f2f2">Messenger</span><span style="font-size: 13px; color: #9a9ea8">Pela página do Facebook</span></span></a>
+</div>
+</details>
+</div>
+</body>
+</html>
